@@ -1,0 +1,27 @@
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
+from datetime import datetime
+
+class AgentLoginRequest(BaseModel):
+    pin_sesi: str
+    username: str
+    password: str
+
+class AgentLoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    peserta_id: int
+
+class Heartbeat(BaseModel):
+    peserta_id: int
+    timestamp: float
+
+class LogAnomaliCreate(BaseModel):
+    peserta_id: int
+    tipe_anomali: str
+    metadata_log: Dict[str, Any]
+    timestamp: float
+
+class TelemetryPayload(BaseModel):
+    data: Any # Either Heartbeat or LogAnomaliCreate, will validate inside endpoint
+    signature: str # HMAC-SHA256 signature for anti-tampering

@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./backend-server
+      dockerfile: Dockerfile
+    container_name: hids_backend
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./backend-server:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    restart: unless-stopped

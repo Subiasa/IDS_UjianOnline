@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIDS Agent - Ujian Online</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #333; margin-bottom: 20px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #4A90E2; color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        button:disabled { background-color: #999; cursor: not-allowed; }
+        .status { margin-top: 20px; font-weight: bold; color: #555; }
+        .active-status { color: #2ecc71; }
+        .warning-status { color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="login-container">
+    <h2>Aktivasi Agen HIDS (Mobile)</h2>
+    <input type="text" id="pin" placeholder="PIN Sesi (contoh: 1234)">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button id="btn-login" onclick="login()">Aktifkan Pemantauan</button>
+    <button id="btn-offline" onclick="startOfflineTest()" style="background-color: #7f8c8d; margin-top: 5px;">Mode Uji Coba Offline</button>
+    <div id="login-status" class="status warning-status"></div>
+</div>
+
+<div class="container" id="monitoring-container" style="display: none;">
+    <h2>Pemantauan Aktif</h2>
+    <p id="mode-text">Agen pemantau sedang berjalan di latar belakang.</p>
+    <div class="status active-status" id="monitor-status-text">Status: MONITORING ACTIVE</div>
+    <br>
+    <button id="btn-mulai-ujian" onclick="window.open('https://google.com', '_blank')">Simulasi Buka Ujian Baru</button>
+    
+    <div id="offline-logs" style="display: none; margin-top: 20px; text-align: left; background: #eee; padding: 10px; border-radius: 5px; max-height: 150px; overflow-y: auto; font-size: 0.85em;">
+        <strong>Log Deteksi Lokal:</strong><br>
+        <ul id="log-list" style="padding-left: 20px; margin: 5px 0;"></ul>
+    </div>
+    
+    <p style="font-size: 0.8em; color: #777; margin-top: 20px;">PERINGATAN: Jangan minimalkan layar ini atau membuka aplikasi lain selama ujian berlangsung.</p>
+</div>
+
+<script src="api.js"></script>
+<script src="sensors.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
