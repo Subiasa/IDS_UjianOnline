@@ -1,16 +1,37 @@
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: hids_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hids_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
   backend:
     build:
       context: ./backend-server
       dockerfile: Dockerfile
     container_name: hids_backend
     ports:
-      - "8002:8000"
+      - "8000:8000"
     volumes:
       - ./backend-server:/app
     environment:
       - PYTHONUNBUFFERED=1
+      - DB_URL=postgresql+asyncpg://postgres:postgres@db:5432/hids_db
+      - SECRET_KEY=ganti_dengan_kunci_rahasia_yang_kuat
+      - AGENT_SECRET_KEY=kunci_rahasia_hmac_untuk_agen_desktop_dan_mobile
+    depends_on:
+      - db
     dns:
       - 8.8.8.8
       - 1.1.1.1
     restart: unless-stopped
+
+volumes:
+  db_data:

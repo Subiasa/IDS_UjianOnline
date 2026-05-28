@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIDS Dashboard Pengawas</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- Top Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>DIKERJAKAN</h3>
+                <p id="total-peserta" class="stat-blue">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>SELESAI</h3>
+                <p id="selesai-peserta" class="stat-green">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>KECURANGAN</h3>
+                <p id="total-anomali" class="stat-red">0</p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content-grid">
+            
+            <!-- Left Panel: Participants Table -->
+            <div class="panel table-panel">
+                <div class="table-header">
+                    <div class="search-container">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="search-input" placeholder="Cari nama atau NISN.....">
+                    </div>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Unknown</th>
+                            <th>Jawaban</th>
+                            <th>Curang <span class="sort-icon">⇅</span></th>
+                            <th>Status <span class="sort-icon">⇅</span></th>
+                            <th>Latency</th>
+                            <th>Skor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="participants-body">
+                        <!-- Rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right Panel: Activity Log -->
+            <div class="panel log-panel">
+                <div class="log-header">
+                    <h2>Log Aktivitas</h2>
+                </div>
+                <div class="log-content">
+                    <ul id="anomaly-list" class="log-list">
+                        <li class="empty-state">Menunggu data aktivitas...</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
