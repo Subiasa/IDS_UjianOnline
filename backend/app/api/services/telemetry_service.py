@@ -14,7 +14,7 @@ async def save_telemetry_log(log_data: schemas.LogAnomaliCreate, db: AsyncSessio
     db.add(new_log)
     await db.commit()
     
-    await manager.broadcast({
+    await manager.broadcast_to_dashboards({
         "type": "anomali",
         "peserta_id": log_data.peserta_id,
         "tipe_anomali": log_data.tipe_anomali,
@@ -33,7 +33,7 @@ async def process_heartbeat(hb_data: schemas.Heartbeat, db: AsyncSession):
         peserta.agent_status = "active"
         await db.commit()
         
-        await manager.broadcast({
+        await manager.broadcast_to_dashboards({
             "type": "heartbeat",
             "peserta_id": hb_data.peserta_id,
             "timestamp": hb_data.timestamp

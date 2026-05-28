@@ -14,13 +14,13 @@ services:
 
   backend:
     build:
-      context: ./backend-server
+      context: ./backend
       dockerfile: Dockerfile
     container_name: hids_backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend-server:/app
+      - ./backend:/app
     environment:
       - PYTHONUNBUFFERED=1
       - DB_URL=postgresql+asyncpg://postgres:postgres@db:5432/hids_db
@@ -35,3 +35,4 @@ services:
 
 volumes:
   db_data:
+

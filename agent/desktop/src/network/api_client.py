@@ -99,6 +99,89 @@ class ApiClient:
         }
         logger.info(f"Menambahkan log ke antrean: {tipe_anomali}")
         self.log_queue.put(payload)
+        
+        # Trigger tangkapan layar otomatis (event-triggered)
+        threading.Thread(target=self.send_screenshot_sync, args=(True,), daemon=True).start()
+
+    def send_screenshot_sync(self, is_anomaly=True):
+        if not hasattr(self, 'ws_app') or not self.ws_app or not self.ws_app.sock:
+            logger.warning("WebSocket tidak terhubung, gagal mengirim tangkapan layar.")
+            return
+
+        from core.sensors.screen_capture import capture_screen_webp
+        base64_img = capture_screen_webp(quality=40)
+        
+        if base64_img:
+            payload = {
+                "type": "screenshot",
+                "peserta_id": config.PESERTA_ID,
+                "is_anomaly": is_anomaly,
+                "image": base64_img,
+                "timestamp": time.time()
+            }
+            # Tambahkan HMAC signature untuk keamanan
+            raw_payload = json.dumps(payload, separators=(',', ':'))
+            signature = self._generate_signature(raw_payload)
+            payload["signature"] = signature
+            
+            try:
+                self.ws_app.send(json.dumps(payload))
+                logger.info("Tangkapan layar berhasil dikirim ke pengawas.")
+            except Exception as e:
+                logger.error(f"Gagal mengirim tangkapan layar: {e}")
+
+    def start_websocket(self):
+        try:
+            import websocket
+        except ImportError:
+            logger.error("websocket-client belum diinstal. Harap jalankan 'pip install websocket-client'")
+            return
+            
+        def on_message(ws, message):
+            try:
+                data = json.loads(message)
+                if data.get("action") == "capture":
+                    logger.info("Permintaan 'Intip Layar' diterima dari pengawas.")
+                    threading.Thread(target=self.send_screenshot_sync, args=(False,), daemon=True).start()
+                elif data.get("action") == "warning":
+                    msg = data.get("message", "Perhatian!")
+                    logger.warning(f"PESAN PERINGATAN DARI PENGAWAS: {msg}")
+                    # Tampilkan pop-up peringatan
+                    def show_warning():
+                        import tkinter as tk
+                        from tkinter import messagebox
+                        # Buat root transparan yang akan hancur sendiri
+                        root = tk.Tk()
+                        root.withdraw()
+                        root.attributes("-topmost", True)
+                        messagebox.showwarning("Peringatan Pengawas", msg, parent=root)
+                        root.destroy()
+                    threading.Thread(target=show_warning, daemon=True).start()
+            except Exception as e:
+                logger.error(f"Error parsing WS message: {e}")
+
+        def on_error(ws, error):
+            logger.debug(f"WS error: {error}")
+
+        def on_close(ws, close_status_code, close_msg):
+            logger.info("Koneksi WS tertutup. Mencoba ulang dalam 10 detik...")
+            # Avoid immediate recursion, use a separate thread or just let the main loop handle it
+            if self.is_running:
+                threading.Timer(10, self.start_websocket).start()
+
+        def on_open(ws):
+            logger.info("Berhasil terhubung ke WebSocket peladen untuk siaran langsung.")
+
+        ws_url = config.SERVER_URL.replace("http://", "ws://").replace("https://", "wss://")
+        url = f"{ws_url}{config.API_PREFIX.replace('/api/v1', '')}/ws/stream/{config.PESERTA_ID}"
+        
+        self.ws_app = websocket.WebSocketApp(url,
+                                             on_open=on_open,
+                                             on_message=on_message,
+                                             on_error=on_error,
+                                             on_close=on_close)
+        
+        threading.Thread(target=self.ws_app.run_forever, daemon=True).start()
 
     def start_heartbeat(self):
         def _beat():

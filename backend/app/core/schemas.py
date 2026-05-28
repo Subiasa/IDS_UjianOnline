@@ -2,6 +2,21 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from datetime import datetime
 
+class CredentialCreateRequest(BaseModel):
+    username: str
+    password: str
+    pin_sesi: str
+
+class BulkCredentialCreateRequest(BaseModel):
+    pin_sesi: str
+    count: int = 5
+    password_default: str = "ujian123"
+
+class CredentialCreateResponse(BaseModel):
+    message: str
+    username: str
+    pin_sesi: str
+
 class AgentLoginRequest(BaseModel):
     pin_sesi: str
     username: str

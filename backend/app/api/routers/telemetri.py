@@ -16,8 +16,15 @@ async def verify_telemetry_signature(request: Request):
     if not signature:
         raise HTTPException(status_code=400, detail="Missing signature")
     
+    body_str = body.decode()
+    try:
+        data = json.loads(body_str)
+        timestamp = data.get("timestamp")
+    except:
+        timestamp = None
+
     # We verify the raw body string with HMAC
-    is_valid = verify_hmac_signature(body.decode(), signature)
+    is_valid = verify_hmac_signature(body_str, signature, timestamp)
     if not is_valid:
         raise HTTPException(status_code=403, detail="Invalid signature")
     return body

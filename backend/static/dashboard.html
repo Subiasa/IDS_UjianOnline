@@ -5,60 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HIDS Dashboard Pengawas</title>
     <link rel="stylesheet" href="dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard-container">
-        
-        <!-- Top Stats Cards -->
+    <div class="dashboard-wrapper">
+        <!-- Header / Top Action Bar -->
+        <header class="top-header">
+            <div class="header-title">
+                <i class="ri-shield-check-fill logo-icon"></i>
+                <h1>HIDS Pengawas</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="refreshData()">
+                    <i class="ri-refresh-line"></i> Refresh Data
+                </button>
+                <button class="btn btn-primary" onclick="openCreateAccountModal()">
+                    <i class="ri-user-add-line"></i> Buat Akun Peserta
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <h3>DIKERJAKAN</h3>
-                <p id="total-peserta" class="stat-blue">0</p>
+            <div class="stat-card blue">
+                <div class="stat-icon"><i class="ri-group-line"></i></div>
+                <div class="stat-info">
+                    <h3>PESERTA AKTIF</h3>
+                    <p id="total-peserta">0</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>SELESAI</h3>
-                <p id="selesai-peserta" class="stat-green">0</p>
+            <div class="stat-card green">
+                <div class="stat-icon"><i class="ri-user-follow-line"></i></div>
+                <div class="stat-info">
+                    <h3>USERNAME DIBUAT</h3>
+                    <p id="selesai-peserta">0</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>KECURANGAN</h3>
-                <p id="total-anomali" class="stat-red">0</p>
+            <div class="stat-card red">
+                <div class="stat-icon"><i class="ri-alert-line"></i></div>
+                <div class="stat-info">
+                    <h3>TOTAL KECURANGAN</h3>
+                    <p id="total-anomali">0</p>
+                </div>
             </div>
         </div>
 
-        <!-- Main Content Area -->
+        <!-- Main Content Grid -->
         <div class="main-content-grid">
-            
-            <!-- Left Panel: Participants Table -->
+            <!-- Left Panel: Table -->
             <div class="panel table-panel">
                 <div class="table-header">
+                    <h2>Pemantauan Peserta</h2>
                     <div class="search-container">
-                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="search-input" placeholder="Cari nama atau NISN.....">
+                        <i class="ri-search-line search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Cari ID atau username...">
                     </div>
                 </div>
-                
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Unknown</th>
-                            <th>Jawaban</th>
-                            <th>Curang <span class="sort-icon">⇅</span></th>
-                            <th>Status <span class="sort-icon">⇅</span></th>
-                            <th>Latency</th>
-                            <th>Skor</th>
-                        </tr>
-                    </thead>
-                    <tbody id="participants-body">
-                        <!-- Rows will be populated by JS -->
-                    </tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Peserta ID</th>
+                                <th>Status <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                                <th>Curang <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                                <th>Latency</th>
+                                <th>Tindakan Cepat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participants-body">
+                            <!-- Rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Right Panel: Activity Log -->
+            <!-- Right Panel: Global Log -->
             <div class="panel log-panel">
                 <div class="log-header">
-                    <h2>Log Aktivitas</h2>
+                    <h2>Log Aktivitas Global</h2>
                 </div>
                 <div class="log-content">
                     <ul id="anomaly-list" class="log-list">
@@ -66,7 +91,105 @@
                     </ul>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <!-- Modal: Buat Akun -->
+    <div id="modal-create-account" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>Buat Akun Peserta</h2>
+                <button class="close-btn" onclick="closeModal('modal-create-account')"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('single')">Akun Tunggal</button>
+                    <button class="tab-btn" onclick="switchTab('bulk')">Banyak Akun</button>
+                </div>
+
+                <form id="form-create-account" class="tab-content active" data-tab="single">
+                    <div class="form-group">
+                        <label>PIN Sesi Ujian</label>
+                        <input type="text" id="ca-pin" placeholder="Contoh: 1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="ca-username" placeholder="Username unik" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="ca-password" placeholder="Password peserta" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-account')">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Akun</button>
+                    </div>
+                </form>
+
+                <form id="form-bulk-create-account" class="tab-content" data-tab="bulk">
+                    <div class="form-group">
+                        <label>PIN Sesi Ujian</label>
+                        <input type="text" id="ba-pin" placeholder="Contoh: 1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Akun</label>
+                        <input type="number" id="ba-count" min="1" max="50" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password Default</label>
+                        <input type="text" id="ba-password" value="ujian123" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-account')">Batal</button>
+                        <button type="submit" class="btn btn-primary">Buat Akun Massal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Detail Peserta -->
+    <div id="modal-participant-detail" class="modal-overlay modal-large">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="pd-title">Detail Peserta: <span id="pd-name">...</span></h2>
+                <button class="close-btn" onclick="closeModal('modal-participant-detail')"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body pd-layout">
+                <div class="pd-sidebar">
+                    <div class="pd-stat">
+                        <span class="label">Status Agen</span>
+                        <span class="value" id="pd-status">Aktif</span>
+                    </div>
+                    <div class="pd-stat">
+                        <span class="label">Total Kecurangan</span>
+                        <span class="value text-red" id="pd-total-curang">0</span>
+                    </div>
+                    <hr class="divider">
+                    <div class="pd-actions">
+                        <button class="btn btn-outline-primary full-width" id="btn-intip-layar">
+                            <i class="ri-eye-line"></i> Intip Layar Sekarang
+                        </button>
+                        <button class="btn btn-outline-danger full-width" id="btn-beri-peringatan">
+                            <i class="ri-error-warning-line"></i> Beri Peringatan
+                        </button>
+                    </div>
+                </div>
+                <div class="pd-main">
+                    <h3 class="section-title">Riwayat Kecurangan & Tangkapan Layar</h3>
+                    <div class="pd-history-list" id="pd-history-list">
+                        <div class="empty-state">Belum ada kecurangan tercatat.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal (for zooming screenshots) -->
+    <div id="modal-image-viewer" class="modal-overlay image-viewer-overlay">
+        <div class="modal-box bg-transparent">
+            <button class="close-btn absolute-top-right text-white" onclick="closeModal('modal-image-viewer')"><i class="ri-close-line ri-2x"></i></button>
+            <img id="viewer-image" src="" alt="Zoomed Screenshot">
         </div>
     </div>
 

@@ -74,6 +74,9 @@ def main():
         
     logger.info("Login berhasil! Mengaktifkan sensor pemantauan...")
     
+    # Buka koneksi WebSocket untuk siaran layar
+    api_client.start_websocket()
+    
     # Define callback for sensors
     def on_anomaly(tipe, deskripsi):
         logger.warning(f"[ANOMALI TERDETEKSI] {tipe}: {deskripsi}")

@@ -59,11 +59,12 @@ def root():
 
 @app.get("/seed")
 async def seed_data(db: AsyncSession = Depends(get_db)):
+    from app.api.utils.security import get_password_hash
     # Create dummy user
     user_result = await db.execute(select(models.User).where(models.User.username == "testuser"))
     user = user_result.scalars().first()
     if not user:
-        user = models.User(username="testuser", password_hash="dummy")
+        user = models.User(username="testuser", password_hash=get_password_hash("password123"))
         db.add(user)
         
     # Create dummy session

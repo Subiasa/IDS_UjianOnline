@@ -9,3 +9,5 @@ python-dotenv
 loguru
 websockets
 alembic
+passlib[bcrypt]
+bcrypt==3.2.0
