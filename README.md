@@ -160,22 +160,6 @@ Login menggunakan PIN sesi, username, dan password yang telah dibuat.
 
 ---
 
-## ⚙️ Konfigurasi Environment
-
-Salin file `.env.example` menjadi `.env` di folder `backend/`, lalu sesuaikan nilainya:
-
-```env
-# URL koneksi database PostgreSQL
-DB_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/hids_db
-
-# Kunci rahasia untuk token JWT (ganti dengan nilai acak yang kuat)
-SECRET_KEY=ganti_dengan_kunci_rahasia_yang_kuat
-
-# Kunci HMAC bersama antara backend dan desktop agent
-AGENT_SECRET_KEY=kunci_rahasia_hmac_untuk_agen_desktop_dan_mobile
-```
-
-> ⚠️ **Penting:** `AGENT_SECRET_KEY` harus sama antara file `.env` backend dan file `config.py` pada Desktop Agent agar verifikasi HMAC berhasil.
 
 ---
 
