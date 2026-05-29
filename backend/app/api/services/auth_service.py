@@ -75,11 +75,13 @@ async def create_credential(data: schemas.CredentialCreateRequest, db: AsyncSess
     # 3. Buat User baru dengan password hash
     user = models.User(username=data.username, password_hash=get_password_hash(data.password), role="peserta")
     db.add(user)
+    # Important: flush here to generate user.id
     await db.flush()
     
     # 4. Hubungkan User dengan SesiUjian sebagai PesertaUjian
     peserta = models.PesertaUjian(user_id=user.id, sesi_id=sesi.id)
     db.add(peserta)
+    await db.flush()
     
     await db.commit()
     return schemas.CredentialCreateResponse(

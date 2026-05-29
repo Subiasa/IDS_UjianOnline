@@ -20,12 +20,8 @@ app = FastAPI(title="HIDS Online Exam API", version="1.0")
 
 @app.on_event("startup")
 async def startup_event():
-    # In async environments with SQLAlchemy 2.0, metadata.create_all 
-    # should be called in a run_sync block on the engine
-    async with engine.begin() as conn:
-        # await conn.run_sync(models.Base.metadata.drop_all) # Only for debugging
-        await conn.run_sync(models.Base.metadata.create_all)
-    logger.info("Database connection established and tables verified.")
+    # Tables already exist in Supabase, skipping automatic creation
+    logger.info("Database connection verified.")
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -36,7 +32,9 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 # Mount PWA static files
-app.mount("/mobile", StaticFiles(directory="static"), name="mobile")
+import os
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "static")
+app.mount("/mobile", StaticFiles(directory=static_dir), name="mobile")
 
 # Allow CORS for Portal Web / Dashboard
 app.add_middleware(

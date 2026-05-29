@@ -18,10 +18,13 @@
             </div>
             <div class="header-actions">
                 <button class="btn btn-secondary" onclick="refreshData()">
-                    <i class="ri-refresh-line"></i> Refresh Data
+                    <i class="ri-refresh-line"></i> Refresh
+                </button>
+                <button class="btn btn-outline-danger" onclick="resetAllData()">
+                    <i class="ri-delete-bin-7-line"></i> Reset Data
                 </button>
                 <button class="btn btn-primary" onclick="openCreateAccountModal()">
-                    <i class="ri-user-add-line"></i> Buat Akun Peserta
+                    <i class="ri-user-add-line"></i> Buat Akun
                 </button>
             </div>
         </header>
@@ -185,7 +188,7 @@
         </div>
     </div>
 
-    <!-- Image Viewer Modal (for zooming screenshots) -->
+    <!-- Modal: Image Viewer -->
     <div id="modal-image-viewer" class="modal-overlay image-viewer-overlay">
         <div class="modal-box bg-transparent">
             <button class="close-btn absolute-top-right text-white" onclick="closeModal('modal-image-viewer')"><i class="ri-close-line ri-2x"></i></button>
@@ -193,6 +196,21 @@
         </div>
     </div>
 
+    <!-- Modal: Custom Alert/Confirm -->
+    <div id="modal-alert" class="modal-overlay">
+        <div class="modal-box" style="max-width: 400px;">
+            <div class="modal-body" style="text-align: center;">
+                <h3 id="alert-title">Pesan</h3>
+                <p id="alert-message" style="margin: 20px 0;"></p>
+                <div id="alert-actions" class="form-actions" style="margin-top:0; justify-content: center;">
+                    <button id="alert-btn-cancel" class="btn btn-secondary" onclick="closeModal('modal-alert')">Batal</button>
+                    <button id="alert-btn-confirm" class="btn btn-primary" onclick="handleAlertConfirm()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="custom_actions.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>

@@ -73,5 +73,62 @@ async def get_telemetry_history(
 async def get_participants(
     db: AsyncSession = Depends(get_db)
 ):
-    result = await db.execute(select(models.PesertaUjian))
-    return result.scalars().all()
+    # Join PesertaUjian with User to get username
+    result = await db.execute(
+        select(models.PesertaUjian, models.User.username)
+        .join(models.User, models.PesertaUjian.user_id == models.User.id)
+    )
+    participants = []
+    for peserta, username in result:
+        p_data = schemas.ParticipantResponse.from_orm(peserta).dict()
+        p_data["username"] = username
+        participants.append(p_data)
+    return participants
+
+@router.delete("/participants/{peserta_id}")
+async def delete_participant(
+    peserta_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        # 1. Get participant
+        result = await db.execute(select(models.PesertaUjian).where(models.PesertaUjian.id == peserta_id))
+        peserta = result.scalars().first()
+        if not peserta:
+            raise HTTPException(status_code=404, detail="Peserta tidak ditemukan")
+        
+        user_id = peserta.user_id
+        
+        # 2. Delete logs associated with this participant
+        from sqlalchemy import delete
+        await db.execute(delete(models.LogAnomali).where(models.LogAnomali.peserta_id == peserta_id))
+        
+        # 3. Delete participant record
+        await db.delete(peserta)
+        
+        # 4. Delete the User record
+        user_result = await db.execute(select(models.User).where(models.User.id == user_id))
+        user = user_result.scalars().first()
+        if user:
+            await db.delete(user)
+            
+        await db.commit()
+        return {"message": f"Peserta {peserta_id} dan akun user berhasil dihapus."}
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Gagal menghapus peserta: {str(e)}")
+
+@router.post("/reset-all")
+async def reset_all_data(
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        from sqlalchemy import delete
+        # Delete only the anomaly logs
+        await db.execute(delete(models.LogAnomali))
+        
+        await db.commit()
+        return {"message": "Semua data log kecurangan berhasil dibersihkan. Data peserta tetap aman."}
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Gagal meriset data: {str(e)}")

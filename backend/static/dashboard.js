@@ -3,7 +3,7 @@ const API_BASE = '/api/v1';
 const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/dashboard`;
 
 // State
-let participants = {}; // peserta_id (string) -> { id, user_id, sesi_id, agent_status, last_heartbeat, history: [] }
+let participants = {}; 
 let globalAnomalies = [];
 let currentSelectedPeserta = null;
 let ws = null;
@@ -57,44 +57,56 @@ async function refreshData() {
     }
 
     try {
+        console.log("Membersihkan dan mengambil data terbaru...");
+        participants = {};
+        globalAnomalies = [];
+        renderTable();
+        renderGlobalLog();
+
         const [partRes, histRes] = await Promise.all([
             fetch(`${API_BASE}/telemetry/participants`),
             fetch(`${API_BASE}/telemetry/history?limit=100`)
         ]);
         
+        if (!partRes.ok || !histRes.ok) throw new Error("Gagal mengambil data dari server");
+
         const partData = await partRes.json();
         const histData = await histRes.json();
         
-        // Reset state
-        participants = {};
-        globalAnomalies = [];
-        currentSelectedPeserta = null; // Reset selection to avoid dangling details
+        if (Array.isArray(partData)) {
+            partData.forEach(p => {
+                participants[String(p.id)] = { ...p, history: [] };
+            });
+        }
         
-        // Setup participants
-        partData.forEach(p => {
-            participants[String(p.id)] = { ...p, history: [] };
-        });
+        if (Array.isArray(histData)) {
+            [...histData].reverse().forEach(log => {
+                const pid = String(log.peserta_id);
+                globalAnomalies.unshift(log); 
+                if (participants[pid]) {
+                    participants[pid].history.unshift(log);
+                }
+            });
+        }
         
-        // Setup history (histData is desc order by default)
-        // Reverse it to process oldest to newest for the state
-        [...histData].reverse().forEach(log => {
-            const pid = String(log.peserta_id);
-            globalAnomalies.unshift(log); // newest first
-            if (participants[pid]) {
-                participants[pid].history.unshift(log);
-            }
-        });
-        
-        // Update Stats
-        document.getElementById('total-peserta').textContent = Object.values(participants).filter(p => p.agent_status === 'active').length;
-        document.getElementById('total-anomali').textContent = histData.length;
-        document.getElementById('selesai-peserta').textContent = partData.length;
+        const activeCount = Object.values(participants).filter(p => p.agent_status === 'active').length;
+        document.getElementById('total-peserta').textContent = activeCount;
+        document.getElementById('total-anomali').textContent = Array.isArray(histData) ? histData.length : 0;
+        document.getElementById('selesai-peserta').textContent = Array.isArray(partData) ? partData.length : 0;
         
         renderTable();
         renderGlobalLog();
         
+        if (currentSelectedPeserta && participants[currentSelectedPeserta]) {
+            openParticipantDetail(currentSelectedPeserta);
+        } else if (currentSelectedPeserta) {
+            closeModal('modal-participant-detail');
+        }
+
+        console.log("Data berhasil disinkronkan.");
     } catch (err) {
-        console.error("Gagal mengambil data", err);
+        console.error("Gagal refresh:", err);
+        customAlert("Gagal sinkronisasi data. Silakan periksa koneksi backend.");
     } finally {
         if (refreshBtn) {
             refreshBtn.disabled = false;
@@ -108,27 +120,39 @@ async function refreshData() {
 // =======================
 function renderTable() {
     const tbody = document.getElementById('participants-body');
-    const search = document.getElementById('search-input').value.toLowerCase();
+    const searchInput = document.getElementById('search-input');
+    const search = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    if (!tbody) return;
     tbody.innerHTML = '';
     
-    Object.values(participants).forEach(p => {
-        const displayName = `Peserta ${p.id}`;
+    const sortedParticipants = Object.values(participants).sort((a, b) => b.id - a.id);
+
+    sortedParticipants.forEach(p => {
+        const displayName = p.username || `Peserta ${p.id}`;
         if (search && !displayName.toLowerCase().includes(search)) return;
         
         const statusClass = p.agent_status === 'active' ? 'active' : 'inactive';
-        const curangCount = p.history.length;
+        const curangCount = p.history ? p.history.length : 0;
         
         const tr = document.createElement('tr');
         tr.onclick = () => openParticipantDetail(String(p.id));
+        tr.style.cursor = 'pointer';
         
         tr.innerHTML = `
             <td><strong>${displayName}</strong></td>
             <td><span class="status-badge ${statusClass}"><i class="ri-checkbox-blank-circle-fill"></i> ${p.agent_status.toUpperCase()}</span></td>
             <td><strong class="text-red">${curangCount}</strong></td>
-            <td><span style="color:var(--success)">Normal</span></td>
-            <td>
-                <button class="btn btn-outline-primary" onclick="event.stopPropagation(); requestScreenshot('${p.id}')">
-                    Intip
+            <td><span style="color:var(--success)">${p.agent_status === 'active' ? 'Stabil' : '-'}</span></td>
+            <td class="actions-cell">
+                <button class="btn btn-icon btn-outline-primary" onclick="event.stopPropagation(); requestScreenshot('${p.id}')" title="Intip Layar">
+                    <i class="ri-eye-line"></i>
+                </button>
+                <button class="btn btn-icon btn-outline-warning" onclick="event.stopPropagation(); sendWarning('${p.id}')" title="Beri Peringatan">
+                    <i class="ri-error-warning-line"></i>
+                </button>
+                <button class="btn btn-icon btn-outline-danger" onclick="event.stopPropagation(); deleteParticipant('${p.id}')" title="Hapus Peserta">
+                    <i class="ri-delete-bin-line"></i>
                 </button>
             </td>
         `;
@@ -231,23 +255,7 @@ function requestScreenshot(pesertaId) {
         }));
         console.log(`Requested screenshot for ${pesertaId}`);
     } else {
-        alert("WebSocket tidak terhubung!");
-    }
-}
-
-function sendWarning(pesertaId) {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        const msg = prompt("Masukkan pesan peringatan untuk peserta:");
-        if (msg) {
-            ws.send(JSON.stringify({
-                action: 'send_warning',
-                peserta_id: String(pesertaId),
-                message: msg
-            }));
-            alert("Peringatan terkirim.");
-        }
-    } else {
-        alert("WebSocket tidak terhubung!");
+        customAlert("WebSocket tidak terhubung!");
     }
 }
 
@@ -286,15 +294,15 @@ function setupEventListeners() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert("Akun berhasil dibuat!");
+                customAlert("Akun berhasil dibuat!");
                 closeModal('modal-create-account');
                 refreshData();
                 e.target.reset();
             } else {
-                alert("Gagal: " + (data.detail || "Error tak dikenal"));
+                customAlert("Gagal: " + (data.detail || "Error tak dikenal"));
             }
         } catch (err) {
-            alert("Terjadi kesalahan jaringan.");
+            customAlert("Terjadi kesalahan jaringan.");
         } finally {
             btn.textContent = originalText;
             btn.disabled = false;
@@ -321,15 +329,15 @@ function setupEventListeners() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert(data.message + "\n\nUser: " + data.users.join(", "));
+                customAlert(data.message + "\n\nUser: " + data.users.join(", "));
                 closeModal('modal-create-account');
                 refreshData();
                 e.target.reset();
             } else {
-                alert("Gagal: " + (data.detail || "Error tak dikenal"));
+                customAlert("Gagal: " + (data.detail || "Error tak dikenal"));
             }
         } catch (err) {
-            alert("Terjadi kesalahan jaringan.");
+            customAlert("Terjadi kesalahan jaringan.");
         } finally {
             btn.textContent = originalText;
             btn.disabled = false;
@@ -355,7 +363,7 @@ function openParticipantDetail(pesertaId) {
     const p = participants[pid];
     if(!p) return;
     
-    document.getElementById('pd-name').textContent = `Peserta ${p.id}`;
+    document.getElementById('pd-name').textContent = p.username || `Peserta ${p.id}`;
     document.getElementById('pd-status').textContent = p.agent_status.toUpperCase();
     document.getElementById('pd-total-curang').textContent = p.history.length;
     

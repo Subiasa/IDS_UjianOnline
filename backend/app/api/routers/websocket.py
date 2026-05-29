@@ -62,6 +62,7 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
+            logger.info(f"Received WS message: {data}") # Debug log
             try:
                 payload = json.loads(data)
                 if payload.get("action") == "peek_screen" and payload.get("peserta_id"):

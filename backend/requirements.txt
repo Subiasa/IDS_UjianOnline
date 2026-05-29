@@ -2,6 +2,7 @@ fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
+psycopg2-binary
 asyncpg
 pydantic<2.0.0
 pyjwt

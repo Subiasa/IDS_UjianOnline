@@ -1,0 +1,87 @@
+2026-05-29 14:17:35,124 - HIDSAgent - INFO - === HIDS Pemantau Ujian Online ===
+2026-05-29 14:17:35,126 - HIDSAgent - INFO - Versi: 1.0 (Desktop Agent)
+2026-05-29 14:17:35,128 - HIDSAgent - DEBUG - Background queue worker started.
+2026-05-29 14:17:52,650 - HIDSAgent - INFO - Mencoba login agen...
+2026-05-29 14:17:54,198 - HIDSAgent - INFO - Login berhasil.
+2026-05-29 14:17:54,289 - HIDSAgent - INFO - Login berhasil! Mengaktifkan sensor pemantauan...
+2026-05-29 14:17:54,829 - HIDSAgent - INFO - Memulai Window Tracker...
+2026-05-29 14:17:54,834 - HIDSAgent - INFO - Memulai Clipboard Monitor...
+2026-05-29 14:17:54,839 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: IDS_pemantau - Antigravity IDE - .env
+2026-05-29 14:17:54,844 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:17:54,846 - HIDSAgent - INFO - Memulai Process Scanner...
+2026-05-29 14:17:54,852 - HIDSAgent - DEBUG - Heartbeat worker started.
+2026-05-29 14:17:54,950 - HIDSAgent - INFO - Agen HIDS aktif. Jangan tutup jendela ini selama ujian berlangsung.
+2026-05-29 14:17:55,126 - HIDSAgent - INFO - Berhasil terhubung ke WebSocket peladen untuk siaran langsung.
+2026-05-29 14:17:58,965 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:17:58,965 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:18:00,337 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:18:00,388 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:18:06,372 - HIDSAgent - INFO - Permintaan 'Intip Layar' diterima dari pengawas.
+2026-05-29 14:18:06,698 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:18:31,244 - HIDSAgent - INFO - Permintaan 'Intip Layar' diterima dari pengawas.
+2026-05-29 14:18:31,757 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:18:37,643 - HIDSAgent - INFO - Permintaan 'Intip Layar' diterima dari pengawas.
+2026-05-29 14:18:38,069 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:18:50,185 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] CLIPBOARD_USAGE: Konten disalin/ditempel: Tindakan Cepat
+2026-05-29 14:18:50,186 - HIDSAgent - INFO - Menambahkan log ke antrean: CLIPBOARD_USAGE
+2026-05-29 14:18:50,788 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:19:10,407 - HIDSAgent - WARNING - PESAN PERINGATAN DARI PENGAWAS: woi
+2026-05-29 14:19:16,299 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:19:16,342 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:19:17,277 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:19:19,527 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: WhatsApp
+2026-05-29 14:19:19,529 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:19:20,292 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:19:35,809 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:19:35,810 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:19:36,288 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:16,454 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:20:16,458 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:16,841 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:19,527 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:20:19,529 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:19,872 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:33,743 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:20:33,744 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:34,188 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:36,767 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:20:36,768 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:37,196 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:40,878 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:20:40,878 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:41,512 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:43,175 - HIDSAgent - INFO - Permintaan 'Intip Layar' diterima dari pengawas.
+2026-05-29 14:20:43,624 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:54,091 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:20:54,131 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:54,819 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:20:58,267 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: WhatsApp
+2026-05-29 14:20:58,268 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:20:58,629 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:12,482 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:21:12,483 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:12,805 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:17,564 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: WhatsApp
+2026-05-29 14:21:17,565 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:17,908 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:27,718 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:21:27,751 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:28,453 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:31,868 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: WhatsApp
+2026-05-29 14:21:31,869 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:32,214 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:42,044 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:21:42,098 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:42,786 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:21:58,352 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Snipping Tool Overlay
+2026-05-29 14:21:58,353 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:21:58,728 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:22:01,390 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: HIDS Dashboard Pengawas — Mozilla Firefox
+2026-05-29 14:22:01,423 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:22:02,145 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:22:32,997 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: Document1 (5).docx  -  Last saved by user - Word
+2026-05-29 14:22:32,998 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:22:33,409 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.
+2026-05-29 14:22:39,107 - HIDSAgent - WARNING - [ANOMALI TERDETEKSI] WINDOW_SWITCHING: Beralih ke jendela: IDS_pemantau - Antigravity IDE - .env
+2026-05-29 14:22:39,109 - HIDSAgent - INFO - Menambahkan log ke antrean: WINDOW_SWITCHING
+2026-05-29 14:22:39,413 - HIDSAgent - INFO - Tangkapan layar berhasil dikirim ke pengawas.

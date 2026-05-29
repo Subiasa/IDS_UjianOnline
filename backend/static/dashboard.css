@@ -108,6 +108,25 @@ body {
     background-color: var(--danger);
     color: white;
 }
+.btn-outline-warning {
+    background-color: transparent;
+    color: var(--warning);
+    border: 1px solid var(--warning);
+}
+.btn-outline-warning:hover {
+    background-color: var(--warning);
+    color: white;
+}
+.btn-icon {
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+}
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
 .full-width {
     width: 100%;
     justify-content: center;

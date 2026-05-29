@@ -49,14 +49,15 @@ class LogAnomaliResponse(BaseModel):
     created_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class ParticipantResponse(BaseModel):
     id: int
     user_id: int
+    username: Optional[str] = None
     sesi_id: int
     agent_status: str
     last_heartbeat: Optional[datetime]
     
     class Config:
-        orm_mode = True
+        from_attributes = True

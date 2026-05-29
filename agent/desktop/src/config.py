@@ -1,7 +1,9 @@
-SERVER_URL = "http://127.0.0.1:8000"
-API_PREFIX = "/api/v1"
-AGENT_SECRET_KEY = "kunci_rahasia_hmac_untuk_agen_desktop_dan_mobile" # Should match server config
+import os
 
+# Membaca dari environment variable, dengan fallback ke nilai default lokal
+SERVER_URL = os.environ.get("SERVER_URL", "http://127.0.0.1:8000")
+API_PREFIX = "/api/v1"
+AGENT_SECRET_KEY = os.environ.get("AGENT_SECRET_KEY", "kunci_rahasia_hmac_untuk_agen_desktop_dan_mobile") # Should match server config
 # Will be set dynamically after login
 SESSION_TOKEN = None
 PESERTA_ID = None
